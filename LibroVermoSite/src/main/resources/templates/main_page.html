@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibroVermo</title>
+    <link rel="stylesheet" href="../static/main_page.css" th:href="@{/main_page.css}">
+
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>LibroVermo</h1>
+            </div>
+            <ul>
+                <li><a href="/">Главная</a></li>
+                <li><a href="/catalog">Каталог</a></li>
+                <li><a href="/LK">Личный кабинет</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Лучшие электронные книги</h2>
+            <p>Исследуйте наш огромный каталог книг в электронном формате и начните читать сегодня.</p>
+            <a href="#" class="btn">Просмотреть каталог</a>
+        </div>
+    </section>
+        <input type="text" id="search-bar">
+        <button onclick="findBook()">Найти</button>
+    <section id="booksContainer" class="featured-books">
+    </section>
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            $.ajax({
+                type: "GET",
+                url: "/GetBooksFeature",
+                success: function(products) {
+                    // Очистка контейнера перед добавлением новых элементов
+                    $("#booksContainer").empty().append($("<h2>Для вас</h2>"));
+                    for (var i = 0; i < products.length; i++) {
+                        createBookElement(products[i]);
+                        console.log("Iteration");
+                    }
+                },
+                error: function(error) {
+                    console.error("Ошибка при получении данных: " + error.responseText);
+                }
+            });
+            function createBookElement(product) {
+                var bookCard = $("<div class='book-card'></div>");
+                //var bookBanner = $("<img class='cov' src='"+product.product_Promo_Ref+"' alt='Не удалось загрузить('>");
+                var bookLogo = $("<img src='"+product.product_Logo_Ref+"' alt='Не удалось загрузить('>");
+                var titleParagraph = $("<h3>" + product.product_Name + "</h3>");
+                var authorParagraph = $("<p>Автор: " + product.product_Author + "</p>");
+                var priceParagraph = $("<p>Цена: " + product.product_Price + "</p>");
+                var moreButton = $("<a href='#' class='btn'>Подробнее</a>");
+
+                //bookCard.append(bookBanner);
+                bookCard.append(bookLogo);
+                bookCard.append(titleParagraph);
+                bookCard.append(authorParagraph);
+                bookCard.append(priceParagraph);
+                bookCard.append(moreButton);
+
+                $("#booksContainer").append(bookCard);
+                bookCard.on("mouseenter", function() {
+                    bookBanner.css('opacity', 0.5);
+                });
+
+                bookCard.on("mouseleave", function() {
+                    bookBanner.css('opacity', 0);
+                });
+            }
+        });
+        function findBook(){
+            var find = document.getElementById("search-bar")
+            const condition = {
+                condition: 'product_name like("%' + find.value+'%")'
+            }
+            $.ajax({
+                type: "GET",
+                url: "/Test",
+                data: condition,
+                success: function(products) {
+                    // Очистка контейнера перед добавлением новых элементов
+                    $("#booksContainer").empty().append($("<h2>Для вас</h2>"));
+                    for (var i = 0; i < products.length; i++) {
+                        createBookElement(products[i]);
+                        console.log("Iteration");
+                    }
+                },
+                error: function(error) {
+                    console.error("Ошибка при получении данных: " + error.responseText);
+                }
+            });
+            function createBookElement(product) {
+                var bookCard = $("<div class='book-card'></div>");
+                //var bookBanner = $("<img class='cov' src='"+product.product_Promo_Ref+"' alt='Не удалось загрузить('>");
+                var bookLogo = $("<img src='"+product.product_Logo_Ref+"' alt='Не удалось загрузить('>");
+                var titleParagraph = $("<h3>" + product.product_Name + "</h3>");
+                var authorParagraph = $("<p>Автор: " + product.product_Author + "</p>");
+                var priceParagraph = $("<p>Цена: " + product.product_Price + "</p>");
+                var moreButton = $("<a href='#' class='btn'>Подробнее</a>");
+
+                //bookCard.append(bookBanner);
+                bookCard.append(bookLogo);
+                bookCard.append(titleParagraph);
+                bookCard.append(authorParagraph);
+                bookCard.append(priceParagraph);
+                bookCard.append(moreButton);
+
+                $("#booksContainer").append(bookCard);
+                bookCard.on("mouseenter", function() {
+                    bookBanner.css('opacity', 0.5);
+                });
+
+                bookCard.on("mouseleave", function() {
+                    bookBanner.css('opacity', 0);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

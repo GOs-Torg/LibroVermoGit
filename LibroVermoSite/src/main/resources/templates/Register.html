@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibroVermo</title>
+    <link rel="stylesheet" href="../static/main_page.css" th:href="@{/main_page.css}">
+</head>
+<body>
+<div class="register_left_panel">
+    <img src="../../../../images/static/logo.jpg">
+</div>
+<div class="register_right_panel">
+    <form method="post" action="/Register">
+        <h2>ФИ*</h2>
+        <input placeholder="Иванов Иван" name="Fio" required>
+        <h2>Псевдоним*</h2>
+        <input placeholder="GostArch" name="client_Nickname" required>
+        <h2>Логин*</h2>
+        <input placeholder="Ivanov122" name="client_Login" required>
+        <h2>Пароль*</h2>
+        <input placeholder="Password!123" name="client_Password" required>
+        <h2>Номер телефона*</h2>
+        <input placeholder="+7 (___) ___-____" name="client_Phone_Number" data-slots="_" required>
+        <h2>Электронная почта*</h2>
+        <input placeholder="example@gmail.com" name="client_Email" required>
+        <h2>Описание профиля</h2>
+        <input placeholder="Фанат Лавкрафта" name="client_Description">
+        <button class="round-button">Регистрация</button>
+        <a href="/Login">Есть аккаунт?</a>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        for (const el of document.querySelectorAll("[placeholder][data-slots]")) {
+            const pattern = el.getAttribute("placeholder"),
+                slots = new Set(el.dataset.slots || "_"),
+                prev = (j => Array.from(pattern, (c,i) => slots.has(c)? j=i+1: j))(0),
+                first = [...pattern].findIndex(c => slots.has(c)),
+                accept = new RegExp(el.dataset.accept || "\\d", "g"),
+                clean = input => {
+                    input = input.match(accept) || [];
+                    return Array.from(pattern, c =>
+                        input[0] === c || slots.has(c) ? input.shift() || c : c
+                    );
+                },
+                format = () => {
+                    const [i, j] = [el.selectionStart, el.selectionEnd].map(i => {
+                        i = clean(el.value.slice(0, i)).findIndex(c => slots.has(c));
+                        return i<0? prev[prev.length-1]: back? prev[i-1] || first: i;
+                    });
+                    el.value = clean(el.value).join``;
+                    el.setSelectionRange(i, j);
+                    back = false;
+                };
+            let back = false;
+            el.addEventListener("keydown", (e) => back = e.key === "Backspace");
+            el.addEventListener("input", format);
+            el.addEventListener("focus", format);
+            el.addEventListener("blur", () => el.value === pattern && (el.value=""));
+        }
+    });
+</script>
+</body>
+</html>

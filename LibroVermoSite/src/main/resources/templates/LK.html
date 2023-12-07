@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibroVermo</title>
+    <link rel="stylesheet" href="../static/main_page.css" th:href="@{/main_page.css}">
+</head>
+<body>
+<header>
+    <nav>
+        <div class="logo">
+            <h1>LibroVermo</h1>
+        </div>
+        <ul>
+            <li><a href="/">Главная</a></li>
+            <li><a href="/catalog">Каталог</a></li>
+            <li><a href="/LK">Личный кабинет</a></li>
+        </ul>
+    </nav>
+</header>
+<div class="main-info-panel">
+    <p th:text="${'Добро пожаловать, ' + clientName.client_Name}"></p>
+    <p th:text="${'Псевдоним: ' + clientName.client_Nickname}"></p>
+    <p th:text="${'Логин: ' + clientName.client_Login}"></p>
+    <p th:text="${'Описание: ' + clientName.client_Description}"></p>
+</div>
+<div class="pages-panel">
+    <a href="/MyBooks">
+        <div class="page-panel">
+            Мои книги
+        </div>
+    </a>
+
+    <a href="/MyRecessions">
+        <div class="page-panel">
+            Мои рецензии
+        </div>
+    </a>
+    <a href="/MyHistory">
+        <div class="page-panel">
+            Мои траты
+        </div>
+    </a>
+</div>
+</body>
+</html>
